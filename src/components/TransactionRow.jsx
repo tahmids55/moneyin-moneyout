@@ -9,7 +9,16 @@ export default function TransactionRow({
   timezone,
   mobile = false,
 }) {
-  const typeClass = tx.type === 'income' ? 'tag-income' : 'tag-expense'
+  const isCashIn = tx.type === 'income' || tx.type === 'debt' || tx.type === 'debts'
+  const typeClass = isCashIn ? 'tag-income' : 'tag-expense'
+  const statusLabel =
+    tx.type === 'debt' || tx.type === 'debts'
+      ? 'Debt'
+      : tx.type === 'asset' || tx.type === 'assets'
+        ? 'Asset'
+        : tx.type === 'income'
+          ? 'Income'
+          : 'Expense'
 
   if (mobile) {
     return (
@@ -19,11 +28,11 @@ export default function TransactionRow({
             <p className="text-sm font-semibold text-slate-100">{tx.category}</p>
             <p className="text-xs text-slate-400">{tx.note || 'No note'}</p>
           </div>
-          <span className={`status-tag ${typeClass}`}>{tx.type}</span>
+          <span className={`status-tag ${typeClass}`}>{statusLabel}</span>
         </div>
         <div className="mt-3 flex items-center justify-between text-sm">
           <p className="text-slate-300">{formatDateByPreference(tx.date, dateFormat, timezone)}</p>
-          <p className={tx.type === 'income' ? 'text-emerald-300' : 'text-rose-300'}>
+          <p className={isCashIn ? 'text-emerald-300' : 'text-rose-300'}>
             {formatCurrency(tx.amount, currency)}
           </p>
         </div>
@@ -46,13 +55,13 @@ export default function TransactionRow({
         <p className="font-medium">{tx.category}</p>
         <p className="text-xs text-slate-400">{tx.note || 'No note'}</p>
       </td>
-      <td className="px-3 py-3 capitalize text-slate-300">{tx.type}</td>
+      <td className="px-3 py-3 capitalize text-slate-300">{statusLabel}</td>
       <td className="px-3 py-3 text-slate-300">{tx.category}</td>
-      <td className={tx.type === 'income' ? 'px-3 py-3 font-semibold text-emerald-300' : 'px-3 py-3 font-semibold text-rose-300'}>
+      <td className={isCashIn ? 'px-3 py-3 font-semibold text-emerald-300' : 'px-3 py-3 font-semibold text-rose-300'}>
         {formatCurrency(tx.amount, currency)}
       </td>
       <td className="px-3 py-3">
-        <span className={`status-tag ${typeClass}`}>{tx.type === 'income' ? 'Incoming' : 'Spent'}</span>
+        <span className={`status-tag ${typeClass}`}>{isCashIn ? 'Incoming' : 'Spent'}</span>
       </td>
       <td className="px-3 py-3">
         <div className="flex gap-2">

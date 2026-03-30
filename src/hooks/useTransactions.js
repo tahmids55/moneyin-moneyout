@@ -52,12 +52,29 @@ export function useTransactions(uid, filters) {
     const fromDate = filters?.fromDate ? parseISO(filters.fromDate) : null
     const toDateValue = filters?.toDate ? endOfDay(parseISO(filters.toDate)) : null
 
+    const normalizedFilterType = (() => {
+      if (!filters?.type || filters.type === 'all') {
+        return 'all'
+      }
+
+      if (filters.type === 'assets') {
+        return 'asset'
+      }
+
+      if (filters.type === 'debts') {
+        return 'debt'
+      }
+
+      return filters.type
+    })()
+
     return transactions.filter((item) => {
       const txDate = toDate(item.date)
       const normalizedNote = (item.note || '').toLowerCase()
       const normalizedCategory = (item.category || '').toLowerCase()
+      const itemType = item.type === 'assets' ? 'asset' : item.type === 'debts' ? 'debt' : item.type
 
-      if (filters?.type && filters.type !== 'all' && item.type !== filters.type) {
+      if (normalizedFilterType !== 'all' && itemType !== normalizedFilterType) {
         return false
       }
 

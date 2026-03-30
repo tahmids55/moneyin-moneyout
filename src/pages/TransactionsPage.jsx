@@ -160,13 +160,26 @@ export default function TransactionsPage() {
 
       await Promise.all(
         validRows.map((row) =>
-          addTransaction(user.uid, {
-            type: row.type.toLowerCase() === 'income' ? 'income' : 'expense',
-            category: row.category,
-            amount: Number(row.amount),
-            note: row.note || '',
-            date: new Date(row.date),
-          }),
+          {
+            const normalizedType = String(row.type || '').trim().toLowerCase()
+            let resolvedType = 'expense'
+
+            if (normalizedType === 'income') {
+              resolvedType = 'income'
+            } else if (normalizedType === 'asset' || normalizedType === 'assets') {
+              resolvedType = 'asset'
+            } else if (normalizedType === 'debt' || normalizedType === 'debts') {
+              resolvedType = 'debt'
+            }
+
+            return addTransaction(user.uid, {
+              type: resolvedType,
+              category: row.category,
+              amount: Number(row.amount),
+              note: row.note || '',
+              date: new Date(row.date),
+            })
+          },
         ),
       )
 

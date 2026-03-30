@@ -13,6 +13,24 @@ import { db, serverTimestamp } from '../firebase/config'
 
 const transactionsRef = collection(db, 'transactions')
 
+function normalizeType(type) {
+  const normalized = String(type || '').trim().toLowerCase()
+
+  if (normalized === 'assets') {
+    return 'asset'
+  }
+
+  if (normalized === 'debts') {
+    return 'debt'
+  }
+
+  if (normalized === 'income' || normalized === 'expense' || normalized === 'asset' || normalized === 'debt') {
+    return normalized
+  }
+
+  return 'expense'
+}
+
 function toMillis(value) {
   if (!value) {
     return 0
@@ -69,9 +87,11 @@ export function subscribeToTransactions(uid, onData, onError) {
     byUid,
     (snapshot) => {
       snapshot.docs.forEach((docItem) => {
+        const data = docItem.data()
         combined.set(docItem.id, {
           id: docItem.id,
-          ...docItem.data(),
+          ...data,
+          type: normalizeType(data.type),
         })
       })
       publish()
@@ -83,9 +103,11 @@ export function subscribeToTransactions(uid, onData, onError) {
     byLegacyUserId,
     (snapshot) => {
       snapshot.docs.forEach((docItem) => {
+        const data = docItem.data()
         combined.set(docItem.id, {
           id: docItem.id,
-          ...docItem.data(),
+          ...data,
+          type: normalizeType(data.type),
         })
       })
       publish()
@@ -107,7 +129,7 @@ export async function addTransaction(uid, payload) {
   return addDoc(transactionsRef, {
     uid,
     userId: uid,
-    type: payload.type,
+    type: normalizeType(payload.type),
     amount: Number(payload.amount),
     category: payload.category.trim(),
     note: payload.note?.trim() || '',
@@ -121,7 +143,7 @@ export async function updateTransaction(id, payload) {
   const txRef = doc(db, 'transactions', id)
 
   return updateDoc(txRef, {
-    type: payload.type,
+    type: normalizeType(payload.type),
     amount: Number(payload.amount),
     category: payload.category.trim(),
     note: payload.note?.trim() || '',

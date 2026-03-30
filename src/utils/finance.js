@@ -65,13 +65,21 @@ export function getTotals(transactions) {
     (acc, tx) => {
       if (tx.type === 'income') {
         acc.income += Number(tx.amount)
-      } else {
+        acc.cashInflow += Number(tx.amount)
+      } else if (tx.type === 'debt' || tx.type === 'debts') {
+        acc.debts += Number(tx.amount)
+        acc.cashInflow += Number(tx.amount)
+      } else if (tx.type === 'expense') {
         acc.expense += Number(tx.amount)
+        acc.cashOutflow += Number(tx.amount)
+      } else if (tx.type === 'asset' || tx.type === 'assets') {
+        acc.assets += Number(tx.amount)
+        acc.cashOutflow += Number(tx.amount)
       }
 
       return acc
     },
-    { income: 0, expense: 0 },
+    { income: 0, expense: 0, debts: 0, assets: 0, cashInflow: 0, cashOutflow: 0 },
   )
 }
 
@@ -79,7 +87,7 @@ export function getExpenseByCategory(transactions) {
   const result = {}
 
   transactions
-    .filter((tx) => tx.type === 'expense')
+    .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
     .forEach((tx) => {
       const key = tx.category || 'Other'
       result[key] = (result[key] || 0) + Number(tx.amount)
@@ -101,7 +109,7 @@ export function getMonthlyIncomeExpenseSeries(transactions, monthCount = 6) {
     const end = endOfMonth(monthDate)
 
     return transactions
-      .filter((tx) => tx.type === 'income')
+      .filter((tx) => tx.type === 'income' || tx.type === 'debt' || tx.type === 'debts')
       .filter((tx) => {
         const date = toDate(tx.date)
         return date && date >= start && date <= end
@@ -111,7 +119,7 @@ export function getMonthlyIncomeExpenseSeries(transactions, monthCount = 6) {
 
   const expense = months.map((monthDate) =>
     transactions
-      .filter((tx) => tx.type === 'expense')
+      .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
       .filter((tx) => {
         const date = toDate(tx.date)
         return date && isSameMonth(date, monthDate)

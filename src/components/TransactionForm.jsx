@@ -79,6 +79,8 @@ export default function TransactionForm({ onSubmit, editingTransaction, onCancel
           <select name="type" value={form.type} onChange={updateForm} className="field-input">
             <option value="income">Income</option>
             <option value="expense">Expense</option>
+            <option value="asset">Asset</option>
+            <option value="debt">Debt</option>
           </select>
         </label>
 

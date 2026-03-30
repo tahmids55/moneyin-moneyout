@@ -27,14 +27,14 @@ export default function DashboardPage() {
   const referenceNow = useMemo(() => new Date(), [])
 
   const totals = useMemo(() => getTotals(transactions), [transactions])
-  const balance = totals.income - totals.expense
+  const balance = totals.cashInflow - totals.cashOutflow
 
   const currentMonthExpense = useMemo(() => {
     const currentMonth = new Date().getMonth()
     const currentYear = new Date().getFullYear()
 
     return transactions
-      .filter((tx) => tx.type === 'expense')
+      .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
       .filter((tx) => {
         const date = toDate(tx.date)
         return date && date.getMonth() === currentMonth && date.getFullYear() === currentYear
@@ -51,7 +51,7 @@ export default function DashboardPage() {
   const todaySpending = useMemo(() => {
     const today = new Date()
     return transactions
-      .filter((tx) => tx.type === 'expense')
+      .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
       .filter((tx) => {
         const date = toDate(tx.date)
         return date && date.toDateString() === today.toDateString()
@@ -63,7 +63,7 @@ export default function DashboardPage() {
     const now = referenceNow.getTime()
     const sevenDaysMs = 7 * 24 * 60 * 60 * 1000
     return transactions
-      .filter((tx) => tx.type === 'expense')
+      .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
       .filter((tx) => {
         const date = toDate(tx.date)
         return date && now - date.getTime() <= sevenDaysMs
@@ -74,7 +74,7 @@ export default function DashboardPage() {
   const highestCategory = useMemo(() => {
     const map = {}
     transactions
-      .filter((tx) => tx.type === 'expense')
+      .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
       .forEach((tx) => {
         const key = tx.category || 'Other'
         map[key] = (map[key] || 0) + Number(tx.amount)
@@ -132,6 +132,8 @@ export default function DashboardPage() {
         <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <SummaryCard label="Total Income" value={formatCurrency(totals.income, currency)} tone="success" />
           <SummaryCard label="Total Expense" value={formatCurrency(totals.expense, currency)} tone="danger" />
+          <SummaryCard label="Total Debts" value={formatCurrency(totals.debts, currency)} tone="success" />
+          <SummaryCard label="Total Assets" value={formatCurrency(totals.assets, currency)} tone="warning" />
           <SummaryCard label="Balance" value={formatCurrency(balance, currency)} tone="primary" />
           <SummaryCard label="Monthly Savings Rate" value={`${savingsRate}%`} tone="violet" />
           <SummaryCard label="Budget Used" value={`${budgetUsedPercent}%`} tone="warning" />
@@ -254,7 +256,13 @@ export default function DashboardPage() {
                         {tx.note || 'No note'} - {formatDateByPreference(toDate(tx.date), dateFormat, timezone)}
                       </p>
                     </div>
-                    <span className={tx.type === 'income' ? 'status-tag tag-income' : 'status-tag tag-expense'}>
+                    <span
+                      className={
+                        tx.type === 'income' || tx.type === 'debt' || tx.type === 'debts'
+                          ? 'status-tag tag-income'
+                          : 'status-tag tag-expense'
+                      }
+                    >
                       {formatCurrency(tx.amount, currency)}
                     </span>
                   </div>

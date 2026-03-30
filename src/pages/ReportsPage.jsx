@@ -76,10 +76,12 @@ export default function ReportsPage() {
   const monthTotals = useMemo(() => getTotals(monthlyTransactions), [monthlyTransactions])
 
   const monthlyBudget = Number(budget?.monthlyBudget || 0)
-  const balance = monthTotals.income - monthTotals.expense
-  const remainingBudget = monthlyBudget - monthTotals.expense
-  const budgetUsedPercent = monthlyBudget > 0 ? ((monthTotals.expense / monthlyBudget) * 100).toFixed(1) : '0.0'
-  const savingsRate = monthTotals.income > 0 ? ((balance / monthTotals.income) * 100).toFixed(1) : '0.0'
+  const balance = monthTotals.cashInflow - monthTotals.cashOutflow
+  const remainingBudget = monthlyBudget - monthTotals.cashOutflow
+  const budgetUsedPercent =
+    monthlyBudget > 0 ? ((monthTotals.cashOutflow / monthlyBudget) * 100).toFixed(1) : '0.0'
+  const savingsRate =
+    monthTotals.cashInflow > 0 ? ((balance / monthTotals.cashInflow) * 100).toFixed(1) : '0.0'
 
   const transactionsByDay = useMemo(() => {
     const grouped = {}
@@ -165,6 +167,8 @@ export default function ReportsPage() {
             value={formatCurrency(monthTotals.expense, currency)}
             tone="danger"
           />
+          <SummaryCard label="Month Debts" value={formatCurrency(monthTotals.debts, currency)} tone="success" />
+          <SummaryCard label="Month Assets" value={formatCurrency(monthTotals.assets, currency)} tone="warning" />
           <SummaryCard label="Balance" value={formatCurrency(balance, currency)} tone="primary" />
           <SummaryCard
             label="Monthly Budget"
@@ -213,7 +217,13 @@ export default function ReportsPage() {
 
                         <div className="text-right">
                           <p className="text-xs uppercase tracking-[0.12em] text-slate-400">{tx.type}</p>
-                          <p className={tx.type === 'income' ? 'text-sm font-semibold text-emerald-300' : 'text-sm font-semibold text-rose-300'}>
+                          <p
+                            className={
+                              tx.type === 'income' || tx.type === 'debt' || tx.type === 'debts'
+                                ? 'text-sm font-semibold text-emerald-300'
+                                : 'text-sm font-semibold text-rose-300'
+                            }
+                          >
                             {formatCurrency(tx.amount, currency)}
                           </p>
                         </div>
