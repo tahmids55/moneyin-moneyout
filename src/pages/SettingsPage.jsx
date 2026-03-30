@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import Sidebar from '../components/Sidebar'
 import Topbar from '../components/Topbar'
@@ -7,6 +8,7 @@ import ToggleSwitch from '../components/ToggleSwitch'
 import { usePreferences } from '../hooks/usePreferences'
 import { useAuth } from '../hooks/useAuth'
 import { updateUserProfile } from '../services/userService'
+import { logoutUser } from '../services/authService'
 
 const currencyOptions = ['USD', 'BDT', 'EUR', 'GBP', 'INR', 'CAD', 'AUD']
 const dateFormats = ['DD/MM/YYYY', 'MM/DD/YYYY']
@@ -44,6 +46,7 @@ const preferredTimezones = [
 ]
 
 export default function SettingsPage() {
+  const navigate = useNavigate()
   const { user, profile, refreshProfile } = useAuth()
   const { preferences, updatePreferences } = usePreferences()
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -87,9 +90,14 @@ export default function SettingsPage() {
     }
   }
 
-  const setTheme = async (theme) => {
-    await updatePreferences({ theme })
-    toast.success(`Switched to ${theme} mode`)
+  const enforceDarkMode = async () => {
+    await updatePreferences({ theme: 'dark-gray' })
+  }
+
+  const onLogout = async () => {
+    await logoutUser()
+    toast.success('Logged out')
+    navigate('/login')
   }
 
   const addCategory = () => {
@@ -154,6 +162,10 @@ export default function SettingsPage() {
 
               <button type="submit" className="btn-primary mt-2" disabled={savingProfile}>
                 {savingProfile ? 'Saving...' : 'Save Profile'}
+              </button>
+
+              <button type="button" className="btn-secondary mt-1" onClick={onLogout}>
+                Logout
               </button>
             </form>
           </SettingsSection>
@@ -278,36 +290,12 @@ export default function SettingsPage() {
             </div>
           </SettingsSection>
 
-          <SettingsSection title="Theme" description="Dark mode first with optional light switch.">
-            <div className="flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => setTheme('light')}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-                  preferences.theme === 'light' ? 'btn-primary' : 'btn-secondary'
-                }`}
-              >
-                Light Mode
-              </button>
-              <button
-                type="button"
-                onClick={() => setTheme('dark')}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-                  preferences.theme === 'dark' ? 'btn-primary' : 'btn-secondary'
-                }`}
-              >
-                Dark Mode
-              </button>
-              <button
-                type="button"
-                onClick={() => setTheme('dark-gray')}
-                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-                  preferences.theme === 'dark-gray' ? 'btn-primary' : 'btn-secondary'
-                }`}
-              >
-                Dark Gray
-              </button>
-            </div>
+          <SettingsSection title="Theme" description="Dark gray mode is default for eye comfort.">
+            <ToggleSwitch
+              label="Dark Mode (default)"
+              checked={true}
+              onChange={enforceDarkMode}
+            />
           </SettingsSection>
         </section>
 

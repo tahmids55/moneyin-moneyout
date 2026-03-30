@@ -9,20 +9,26 @@ export default {
         display: ['Outfit', 'sans-serif'],
       },
       colors: {
-        app: {
-          primary: '#C0C0C0',
-          secondary: '#6B7280',
-          accent: '#F87171',
-          background: '#F9FAFB',
-          card: '#FFFFFF',
-          text: '#111827',
+        bg: {
+          primary: '#18181B',
+          secondary: '#1F1F23',
+          card: '#232326',
+          elevated: '#2A2A2E',
         },
-        appDark: {
-          background: '#1F1F1F',
-          card: '#2C2C2C',
-          primary: '#9CA3AF',
-          accent: '#F87171',
-          text: '#E5E7EB',
+        text: {
+          primary: '#E4E4E7',
+          secondary: '#A1A1AA',
+          disabled: '#71717A',
+        },
+        border: {
+          soft: '#2F2F34',
+        },
+        accent: {
+          primary: '#3B82F6',
+          hover: '#2563EB',
+          success: '#22C55E',
+          danger: '#EF4444',
+          warning: '#F59E0B',
         },
       },
     },

@@ -16,7 +16,7 @@ import ChartCard from './ChartCard'
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement)
 
 export default function AnalyticsCharts({ transactions, theme = 'light' }) {
-  const isDarkTheme = theme === 'dark' || theme === 'dark-gray'
+  void theme
   const categoryMap = getExpenseByCategory(transactions)
   const categoryLabels = Object.keys(categoryMap)
   const categoryValues = Object.values(categoryMap)
@@ -29,9 +29,7 @@ export default function AnalyticsCharts({ transactions, theme = 'light' }) {
         label: 'Expense by Category',
         data: categoryValues.length ? categoryValues : [1],
         backgroundColor:
-          isDarkTheme
-            ? ['#9CA3AF', '#6B7280', '#F87171', '#34D399', '#FBBF24', '#E5E7EB', '#52525B']
-            : ['#C0C0C0', '#6B7280', '#F87171', '#34D399', '#FBBF24', '#9CA3AF', '#D1D5DB'],
+          ['#6B7280', '#71717A', '#EF4444', '#22C55E', '#F59E0B', '#94A3B8', '#3B82F6'],
       },
     ],
   }
@@ -44,12 +42,12 @@ export default function AnalyticsCharts({ transactions, theme = 'light' }) {
       {
         label: 'Income',
         data: monthly.income,
-        backgroundColor: 'rgba(52, 211, 153, 0.8)',
+        backgroundColor: 'rgba(34, 197, 94, 0.72)',
       },
       {
         label: 'Expense',
         data: monthly.expense,
-        backgroundColor: 'rgba(248, 113, 113, 0.82)',
+        backgroundColor: 'rgba(239, 68, 68, 0.72)',
       },
     ],
   }
@@ -60,16 +58,16 @@ export default function AnalyticsCharts({ transactions, theme = 'light' }) {
       {
         label: 'Net Cashflow',
         data: monthly.income.map((income, index) => income - monthly.expense[index]),
-        borderColor: '#22d3ee',
-        backgroundColor: 'rgba(34, 211, 238, 0.18)',
+        borderColor: '#3B82F6',
+        backgroundColor: 'rgba(59, 130, 246, 0.14)',
         tension: 0.35,
         fill: true,
       },
     ],
   }
 
-  const axisTextColor = isDarkTheme ? '#F9FAFB' : '#111827'
-  const gridColor = isDarkTheme ? 'rgba(148, 163, 184, 0.25)' : 'rgba(148, 163, 184, 0.2)'
+  const axisTextColor = '#E4E4E7'
+  const gridColor = '#2F2F34'
 
   const barOptions = {
     responsive: true,

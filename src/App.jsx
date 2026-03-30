@@ -13,8 +13,7 @@ import AboutPage from './pages/AboutPage'
 import { usePreferences } from './hooks/usePreferences'
 
 function App() {
-  const { theme } = usePreferences()
-  const isDarkTheme = theme === 'dark' || theme === 'dark-gray'
+  usePreferences()
 
   return (
     <>
@@ -91,19 +90,10 @@ function App() {
         toastOptions={{
           style: {
             borderRadius: '0.8rem',
-            background:
-              isDarkTheme
-                ? 'rgba(44, 44, 44, 0.95)'
-                : 'rgba(255, 255, 255, 0.96)',
-            color: isDarkTheme ? '#E5E7EB' : '#111827',
-            border:
-              isDarkTheme
-                ? '1px solid rgba(156, 163, 175, 0.4)'
-                : '1px solid rgba(203, 213, 225, 0.7)',
-            boxShadow:
-              isDarkTheme
-                ? '0 12px 26px rgba(0, 0, 0, 0.45)'
-                : '0 10px 24px rgba(15, 23, 42, 0.1)',
+            background: '#232326',
+            color: '#E4E4E7',
+            border: '1px solid #2F2F34',
+            boxShadow: '0 10px 24px rgba(0, 0, 0, 0.4)',
             backdropFilter: 'blur(10px)',
           },
         }}

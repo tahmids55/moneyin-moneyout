@@ -22,7 +22,7 @@ function UserAvatar({ displayName }) {
     .join('')
 
   return (
-    <div className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-cyan-300 to-violet-400 text-sm font-bold text-slate-950">
+    <div className="grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br from-blue-400 to-zinc-400 text-sm font-bold text-slate-950">
       {initials || 'ST'}
     </div>
   )

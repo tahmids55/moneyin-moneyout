@@ -3,14 +3,22 @@ import { useAuth } from './useAuth'
 import { subscribeToSettings, upsertUserSettings } from '../services/settingsService'
 
 const STORAGE_KEY = 'sft.preferences'
+const DEFAULT_THEME = 'dark-gray'
 
 const defaultPreferences = {
-  theme: 'light',
+  theme: DEFAULT_THEME,
   currency: 'USD',
   dateFormat: 'DD/MM/YYYY',
   timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
   notificationsEnabled: true,
   overspendAlertsEnabled: true,
+}
+
+function forceDarkGrayTheme(preferences) {
+  return {
+    ...preferences,
+    theme: DEFAULT_THEME,
+  }
 }
 
 function getStoredPreferences() {
@@ -20,7 +28,7 @@ function getStoredPreferences() {
       return defaultPreferences
     }
 
-    return { ...defaultPreferences, ...JSON.parse(raw) }
+    return forceDarkGrayTheme({ ...defaultPreferences, ...JSON.parse(raw) })
   } catch {
     return defaultPreferences
   }
@@ -44,7 +52,7 @@ export function PreferencesProvider({ children }) {
           return
         }
 
-        const merged = { ...defaultPreferences, ...settings }
+        const merged = forceDarkGrayTheme({ ...defaultPreferences, ...settings })
         setPreferences(merged)
         localStorage.setItem(STORAGE_KEY, JSON.stringify(merged))
       },
@@ -58,16 +66,15 @@ export function PreferencesProvider({ children }) {
 
   useEffect(() => {
     const root = document.documentElement
-    const isDarkMode = preferences.theme === 'dark' || preferences.theme === 'dark-gray'
-    root.classList.toggle('dark', isDarkMode)
-    root.classList.toggle('dark-gray', preferences.theme === 'dark-gray')
+    root.classList.add('dark')
+    root.classList.add('dark-gray')
   }, [preferences.theme])
 
   const updatePreferences = useCallback(async (partial) => {
     let nextPreferences = null
 
     setPreferences((prev) => {
-      nextPreferences = { ...prev, ...partial }
+      nextPreferences = forceDarkGrayTheme({ ...prev, ...partial })
       localStorage.setItem(STORAGE_KEY, JSON.stringify(nextPreferences))
       return nextPreferences
     })
