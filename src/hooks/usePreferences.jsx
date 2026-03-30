@@ -14,13 +14,6 @@ const defaultPreferences = {
   overspendAlertsEnabled: true,
 }
 
-function forceDarkGrayTheme(preferences) {
-  return {
-    ...preferences,
-    theme: DEFAULT_THEME,
-  }
-}
-
 function getStoredPreferences() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -28,7 +21,7 @@ function getStoredPreferences() {
       return defaultPreferences
     }
 
-    return forceDarkGrayTheme({ ...defaultPreferences, ...JSON.parse(raw) })
+    return { ...defaultPreferences, ...JSON.parse(raw) }
   } catch {
     return defaultPreferences
   }
@@ -52,7 +45,7 @@ export function PreferencesProvider({ children }) {
           return
         }
 
-        const merged = forceDarkGrayTheme({ ...defaultPreferences, ...settings })
+        const merged = { ...defaultPreferences, ...settings }
         setPreferences(merged)
         localStorage.setItem(STORAGE_KEY, JSON.stringify(merged))
       },
@@ -66,15 +59,16 @@ export function PreferencesProvider({ children }) {
 
   useEffect(() => {
     const root = document.documentElement
-    root.classList.add('dark')
-    root.classList.add('dark-gray')
+    const isDarkMode = preferences.theme === 'dark' || preferences.theme === 'dark-gray'
+    root.classList.toggle('dark', isDarkMode)
+    root.classList.toggle('dark-gray', preferences.theme === 'dark-gray')
   }, [preferences.theme])
 
   const updatePreferences = useCallback(async (partial) => {
     let nextPreferences = null
 
     setPreferences((prev) => {
-      nextPreferences = forceDarkGrayTheme({ ...prev, ...partial })
+      nextPreferences = { ...prev, ...partial }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(nextPreferences))
       return nextPreferences
     })

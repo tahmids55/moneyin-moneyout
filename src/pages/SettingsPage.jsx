@@ -90,8 +90,9 @@ export default function SettingsPage() {
     }
   }
 
-  const enforceDarkMode = async () => {
-    await updatePreferences({ theme: 'dark-gray' })
+  const setTheme = async (theme) => {
+    await updatePreferences({ theme })
+    toast.success(`Switched to ${theme} mode`)
   }
 
   const onLogout = async () => {
@@ -290,12 +291,36 @@ export default function SettingsPage() {
             </div>
           </SettingsSection>
 
-          <SettingsSection title="Theme" description="Dark gray mode is default for eye comfort.">
-            <ToggleSwitch
-              label="Dark Mode (default)"
-              checked={true}
-              onChange={enforceDarkMode}
-            />
+          <SettingsSection title="Theme" description="Choose your preferred visual mode.">
+            <div className="flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => setTheme('light')}
+                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+                  preferences.theme === 'light' ? 'btn-primary' : 'btn-secondary'
+                }`}
+              >
+                Light Mode
+              </button>
+              <button
+                type="button"
+                onClick={() => setTheme('dark')}
+                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+                  preferences.theme === 'dark' ? 'btn-primary' : 'btn-secondary'
+                }`}
+              >
+                Dark Mode
+              </button>
+              <button
+                type="button"
+                onClick={() => setTheme('dark-gray')}
+                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+                  preferences.theme === 'dark-gray' ? 'btn-primary' : 'btn-secondary'
+                }`}
+              >
+                Dark Gray
+              </button>
+            </div>
           </SettingsSection>
         </section>
 
