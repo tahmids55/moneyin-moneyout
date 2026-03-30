@@ -25,6 +25,7 @@ function toDate(value) {
 export function useTransactions(uid, filters) {
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     if (!uid) {
@@ -35,9 +36,11 @@ export function useTransactions(uid, filters) {
       uid,
       (items) => {
         setTransactions(items)
+        setError(null)
         setLoading(false)
       },
-      () => {
+      (nextError) => {
+        setError(nextError)
         setLoading(false)
       },
     )
@@ -87,8 +90,9 @@ export function useTransactions(uid, filters) {
       transactions: [],
       filteredTransactions: [],
       loading: false,
+      error: null,
     }
   }
 
-  return { transactions, filteredTransactions, loading }
+  return { transactions, filteredTransactions, loading, error }
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
 import Navbar from '../components/Navbar'
 import TransactionForm from '../components/TransactionForm'
@@ -28,7 +28,15 @@ export default function TransactionsPage() {
   const [filters, setFilters] = useState(initialFilters)
   const [editingTransaction, setEditingTransaction] = useState(null)
 
-  const { filteredTransactions, transactions } = useTransactions(user?.uid, filters)
+  const { filteredTransactions, transactions, error } = useTransactions(user?.uid, filters)
+
+  useEffect(() => {
+    if (!error) {
+      return
+    }
+
+    toast.error(error.message || 'Could not load transactions')
+  }, [error])
 
   const categories = useMemo(() => {
     const categorySet = new Set(transactions.map((tx) => tx.category).filter(Boolean))
