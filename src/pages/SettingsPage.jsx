@@ -115,7 +115,7 @@ export default function SettingsPage() {
                 />
               </label>
               <p className="text-xs text-muted">
-                Email is managed by Firebase Authentication and cannot be edited here.
+                Email cannot be edited.
               </p>
             </div>
 
