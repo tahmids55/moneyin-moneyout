@@ -58,7 +58,9 @@ export function PreferencesProvider({ children }) {
 
   useEffect(() => {
     const root = document.documentElement
-    root.classList.toggle('dark', preferences.theme === 'dark')
+    const isDarkMode = preferences.theme === 'dark' || preferences.theme === 'dark-gray'
+    root.classList.toggle('dark', isDarkMode)
+    root.classList.toggle('dark-gray', preferences.theme === 'dark-gray')
   }, [preferences.theme])
 
   const updatePreferences = useCallback(async (partial) => {

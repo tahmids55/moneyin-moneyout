@@ -11,6 +11,7 @@ import { usePreferences } from './hooks/usePreferences'
 
 function App() {
   const { theme } = usePreferences()
+  const isDarkTheme = theme === 'dark' || theme === 'dark-gray'
 
   return (
     <>
@@ -64,16 +65,16 @@ function App() {
           style: {
             borderRadius: '0.8rem',
             background:
-              theme === 'dark'
+              isDarkTheme
                 ? 'rgba(44, 44, 44, 0.95)'
                 : 'rgba(255, 255, 255, 0.96)',
-            color: theme === 'dark' ? '#E5E7EB' : '#111827',
+            color: isDarkTheme ? '#E5E7EB' : '#111827',
             border:
-              theme === 'dark'
+              isDarkTheme
                 ? '1px solid rgba(156, 163, 175, 0.4)'
                 : '1px solid rgba(203, 213, 225, 0.7)',
             boxShadow:
-              theme === 'dark'
+              isDarkTheme
                 ? '0 12px 26px rgba(0, 0, 0, 0.45)'
                 : '0 10px 24px rgba(15, 23, 42, 0.1)',
             backdropFilter: 'blur(10px)',

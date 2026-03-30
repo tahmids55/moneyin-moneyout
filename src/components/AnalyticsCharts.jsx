@@ -16,6 +16,7 @@ import ChartCard from './ChartCard'
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, LineElement, PointElement)
 
 export default function AnalyticsCharts({ transactions, theme = 'light' }) {
+  const isDarkTheme = theme === 'dark' || theme === 'dark-gray'
   const categoryMap = getExpenseByCategory(transactions)
   const categoryLabels = Object.keys(categoryMap)
   const categoryValues = Object.values(categoryMap)
@@ -28,7 +29,7 @@ export default function AnalyticsCharts({ transactions, theme = 'light' }) {
         label: 'Expense by Category',
         data: categoryValues.length ? categoryValues : [1],
         backgroundColor:
-          theme === 'dark'
+          isDarkTheme
             ? ['#9CA3AF', '#6B7280', '#F87171', '#34D399', '#FBBF24', '#E5E7EB', '#52525B']
             : ['#C0C0C0', '#6B7280', '#F87171', '#34D399', '#FBBF24', '#9CA3AF', '#D1D5DB'],
       },
@@ -67,8 +68,8 @@ export default function AnalyticsCharts({ transactions, theme = 'light' }) {
     ],
   }
 
-  const axisTextColor = theme === 'dark' ? '#F9FAFB' : '#111827'
-  const gridColor = theme === 'dark' ? 'rgba(148, 163, 184, 0.25)' : 'rgba(148, 163, 184, 0.2)'
+  const axisTextColor = isDarkTheme ? '#F9FAFB' : '#111827'
+  const gridColor = isDarkTheme ? 'rgba(148, 163, 184, 0.25)' : 'rgba(148, 163, 184, 0.2)'
 
   const barOptions = {
     responsive: true,

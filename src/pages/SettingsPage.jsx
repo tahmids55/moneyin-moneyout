@@ -118,6 +118,7 @@ export default function SettingsPage() {
   const topbarActions = [
     { label: 'Light', onClick: () => setTheme('light') },
     { label: 'Dark', onClick: () => setTheme('dark'), tone: 'primary' },
+    { label: 'Dark Gray', onClick: () => setTheme('dark-gray') },
   ]
 
   return (
@@ -303,6 +304,15 @@ export default function SettingsPage() {
                 }`}
               >
                 Dark Mode
+              </button>
+              <button
+                type="button"
+                onClick={() => setTheme('dark-gray')}
+                className={`rounded-xl px-4 py-2 text-sm font-semibold ${
+                  preferences.theme === 'dark-gray' ? 'btn-primary' : 'btn-secondary'
+                }`}
+              >
+                Dark Gray
               </button>
             </div>
           </SettingsSection>
