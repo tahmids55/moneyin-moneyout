@@ -95,7 +95,7 @@
   }
 
   .app-sidebar {
-    @apply fixed left-4 top-4 z-40 h-[calc(100vh-2rem)] w-56 rounded-2xl;
+    @apply fixed left-4 top-4 z-40 h-[calc(100vh-2rem)] w-56 flex-col rounded-2xl;
     border: 1px solid var(--border-soft);
     background: linear-gradient(180deg, rgba(16, 19, 25, 0.96), rgba(14, 17, 24, 0.9));
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.32);
@@ -223,5 +223,177 @@
 
   .text-muted {
     color: var(--text-muted);
+  }
+
+  .sidebar-header {
+    @apply mx-3 mt-3 flex items-center gap-3 rounded-xl border border-slate-500/20 bg-slate-800/40 p-3;
+  }
+
+  .sidebar-nav {
+    @apply mt-5 space-y-1 px-3;
+  }
+
+  .sidebar-brand {
+    @apply mt-auto px-4 pb-4;
+  }
+
+  .sidebar-brand p {
+    @apply text-xs font-semibold tracking-[0.34em];
+  }
+
+  .sidebar-brand p:first-child {
+    color: #67e8f9;
+  }
+
+  .sidebar-brand p:last-child {
+    color: #a78bfa;
+  }
+
+  .mobile-drawer {
+    @apply h-full w-72 overflow-y-auto border-r border-slate-500/30 bg-slate-950 pt-4;
+  }
+
+  .topbar-shell {
+    @apply flex flex-col gap-3 rounded-2xl border border-slate-500/20 px-4 py-4 lg:flex-row lg:items-center lg:justify-between;
+  }
+
+  .topbar-title {
+    @apply font-display text-2xl text-main;
+  }
+
+  .topbar-subtitle {
+    @apply mt-1 text-sm text-muted;
+  }
+
+  .topbar-actions {
+    @apply flex flex-wrap gap-2;
+  }
+
+  .topbar-menu-btn {
+    @apply rounded-lg border border-slate-500/30 bg-slate-900/60 p-2 text-slate-200;
+  }
+
+  .summary-card {
+    @apply rounded-2xl border border-slate-500/20 p-4;
+    background: linear-gradient(140deg, rgba(12, 15, 22, 0.8), rgba(18, 23, 31, 0.62));
+  }
+
+  .summary-label {
+    @apply text-xs uppercase tracking-[0.18em] text-slate-400;
+  }
+
+  .summary-value {
+    @apply mt-2 font-display text-2xl text-slate-100;
+  }
+
+  .summary-hint {
+    @apply mt-1 text-xs text-slate-400;
+  }
+
+  .summary-success {
+    box-shadow: inset 0 0 0 1px rgba(16, 185, 129, 0.2);
+  }
+
+  .summary-danger {
+    box-shadow: inset 0 0 0 1px rgba(244, 63, 94, 0.2);
+  }
+
+  .summary-primary {
+    box-shadow: inset 0 0 0 1px rgba(34, 211, 238, 0.2);
+  }
+
+  .summary-violet {
+    box-shadow: inset 0 0 0 1px rgba(167, 139, 250, 0.2);
+  }
+
+  .summary-warning {
+    box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.2);
+  }
+
+  .summary-neutral {
+    box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.16);
+  }
+
+  .quick-action-card {
+    @apply flex items-center gap-3 rounded-xl border border-slate-500/20 bg-slate-900/60 px-3 py-3 text-left transition;
+  }
+
+  .quick-action-card:hover {
+    transform: translateY(-1px);
+    border-color: rgba(34, 211, 238, 0.45);
+    box-shadow: 0 10px 22px rgba(34, 211, 238, 0.16);
+  }
+
+  .quick-action-icon {
+    @apply grid h-8 w-8 place-items-center rounded-lg text-xs font-semibold;
+    background: linear-gradient(135deg, rgba(34, 211, 238, 0.24), rgba(109, 74, 255, 0.24));
+    color: #b8ecff;
+  }
+
+  .quick-action-label {
+    @apply text-sm font-medium text-slate-100;
+  }
+
+  .status-tag {
+    @apply inline-flex rounded-full px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.08em];
+  }
+
+  .tag-income {
+    background: rgba(16, 185, 129, 0.2);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+  }
+
+  .tag-expense {
+    background: rgba(244, 63, 94, 0.2);
+    color: #fda4af;
+    border: 1px solid rgba(244, 63, 94, 0.35);
+  }
+
+  .widget-item {
+    @apply flex items-center justify-between rounded-lg bg-slate-900/50 px-3 py-2;
+  }
+
+  .widget-item span {
+    @apply text-slate-300;
+  }
+
+  .widget-item strong {
+    @apply text-slate-100;
+  }
+
+  .toggle-row {
+    @apply flex items-center justify-between rounded-xl border border-slate-500/20 bg-slate-900/50 px-3 py-2;
+  }
+
+  .toggle-switch {
+    @apply relative h-6 w-11 rounded-full transition;
+  }
+
+  .toggle-on {
+    @apply bg-cyan-400/70;
+  }
+
+  .toggle-off {
+    @apply bg-slate-600/80;
+  }
+
+  .toggle-knob {
+    @apply absolute left-1 top-1 h-4 w-4 rounded-full bg-white transition;
+  }
+
+  .toggle-on .toggle-knob {
+    transform: translateX(1.2rem);
+  }
+
+  .skeleton-row {
+    @apply h-12 rounded-xl bg-slate-700/40;
+    animation: pulse-sheen 1.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-sheen {
+    0% { opacity: 0.45; }
+    50% { opacity: 0.95; }
+    100% { opacity: 0.45; }
   }
 }

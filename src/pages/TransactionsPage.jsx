@@ -1,9 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
 import toast from 'react-hot-toast'
-import Navbar from '../components/Navbar'
+import Sidebar from '../components/Sidebar'
+import Topbar from '../components/Topbar'
 import TransactionForm from '../components/TransactionForm'
 import FiltersBar from '../components/FiltersBar'
 import TransactionTable from '../components/TransactionTable'
+import QuickActionCard from '../components/QuickActionCard'
+import Modal from '../components/Modal'
+import SkeletonLoader from '../components/SkeletonLoader'
 import { useAuth } from '../hooks/useAuth'
 import { useTransactions } from '../hooks/useTransactions'
 import {
@@ -25,10 +29,12 @@ const initialFilters = {
 export default function TransactionsPage() {
   const { user } = useAuth()
   const { currency, dateFormat, timezone } = usePreferences()
+  const [mobileOpen, setMobileOpen] = useState(false)
   const [filters, setFilters] = useState(initialFilters)
   const [editingTransaction, setEditingTransaction] = useState(null)
+  const [pendingDelete, setPendingDelete] = useState(null)
 
-  const { filteredTransactions, transactions, error } = useTransactions(user?.uid, filters)
+  const { filteredTransactions, transactions, error, loading } = useTransactions(user?.uid, filters)
 
   useEffect(() => {
     if (!error) {
@@ -63,16 +69,15 @@ export default function TransactionsPage() {
     }
   }
 
-  const removeTransaction = async (id) => {
-    const shouldDelete = window.confirm('Delete this transaction?')
-
-    if (!shouldDelete) {
+  const removeTransaction = async () => {
+    if (!pendingDelete?.id) {
       return
     }
 
     try {
-      await deleteTransaction(id)
+      await deleteTransaction(pendingDelete.id)
       toast.success('Transaction deleted')
+      setPendingDelete(null)
     } catch {
       toast.error('Unable to delete transaction')
     }
@@ -173,11 +178,47 @@ export default function TransactionsPage() {
     }
   }
 
+  const actions = [
+    { label: '+ Add Income', tone: 'primary', onClick: () => setEditingTransaction(null) },
+    { label: '+ Add Expense', tone: 'primary', onClick: () => setEditingTransaction(null) },
+    { label: 'Export', onClick: exportCsv },
+    { label: 'Import', onClick: () => document.getElementById('csv-import-input')?.click() },
+    { label: 'Filter', onClick: () => setFilters(initialFilters) },
+  ]
+
+  const quickActions = [
+    { label: 'Add Income', icon: 'IN', onClick: () => setEditingTransaction(null) },
+    { label: 'Add Expense', icon: 'EX', onClick: () => setEditingTransaction(null) },
+    { label: 'Export CSV', icon: 'EC', onClick: exportCsv },
+    { label: 'Import CSV', icon: 'IC', onClick: () => document.getElementById('csv-import-input')?.click() },
+  ]
+
   return (
     <div className="app-shell">
-      <Navbar />
+      <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
 
       <main className="app-content">
+        <Topbar
+          title="Transactions"
+          subtitle="Track, filter, and manage your ledger entries"
+          onMenu={() => setMobileOpen(true)}
+          actions={actions}
+        />
+
+        <section className="glass rounded-2xl border border-slate-500/20 p-5">
+          <h2 className="font-display text-lg text-main">Quick Actions</h2>
+          <div className="mt-3 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            {quickActions.map((item) => (
+              <QuickActionCard
+                key={item.label}
+                icon={item.icon}
+                label={item.label}
+                onClick={item.onClick}
+              />
+            ))}
+          </div>
+        </section>
+
         <TransactionForm
           key={editingTransaction?.id || 'new'}
           onSubmit={submitTransaction}
@@ -197,6 +238,7 @@ export default function TransactionsPage() {
             <label className="btn-secondary cursor-pointer">
               Import CSV
               <input
+                id="csv-import-input"
                 type="file"
                 accept=".csv,text/csv"
                 className="hidden"
@@ -209,13 +251,28 @@ export default function TransactionsPage() {
           </div>
         </div>
 
-        <TransactionTable
-          transactions={filteredTransactions}
-          onEdit={setEditingTransaction}
-          onDelete={removeTransaction}
-          currency={currency}
-          dateFormat={dateFormat}
-          timezone={timezone}
+        {loading ? (
+          <section className="glass rounded-2xl border border-slate-500/20 p-5">
+            <SkeletonLoader rows={6} />
+          </section>
+        ) : (
+          <TransactionTable
+            transactions={filteredTransactions}
+            onEdit={setEditingTransaction}
+            onDelete={setPendingDelete}
+            currency={currency}
+            dateFormat={dateFormat}
+            timezone={timezone}
+          />
+        )}
+
+        <Modal
+          open={Boolean(pendingDelete)}
+          title="Delete transaction"
+          description="This action cannot be undone. Do you want to continue?"
+          confirmLabel="Delete"
+          onConfirm={removeTransaction}
+          onCancel={() => setPendingDelete(null)}
         />
       </main>
     </div>
