@@ -9,7 +9,14 @@ import { useAuth } from '../hooks/useAuth'
 import { useTransactions } from '../hooks/useTransactions'
 import { useBudget } from '../hooks/useBudget'
 import { usePreferences } from '../hooks/usePreferences'
-import { formatCurrency, formatDateByPreference, getTotals, toDate } from '../utils/finance'
+import {
+  formatCurrency,
+  formatDateByPreference,
+  getTotals,
+  getTransactionTypeLabel,
+  isCashInType,
+  toDate,
+} from '../utils/finance'
 
 const monthOptions = [
   { label: 'January', value: 0 },
@@ -216,10 +223,12 @@ export default function ReportsPage() {
                         </div>
 
                         <div className="text-right">
-                          <p className="text-xs uppercase tracking-[0.12em] text-slate-400">{tx.type}</p>
+                          <p className="text-xs uppercase tracking-[0.12em] text-slate-400">
+                            {getTransactionTypeLabel(tx.type)}
+                          </p>
                           <p
                             className={
-                              tx.type === 'income' || tx.type === 'debt' || tx.type === 'debts'
+                              isCashInType(tx.type)
                                 ? 'text-sm font-semibold text-emerald-300'
                                 : 'text-sm font-semibold text-rose-300'
                             }

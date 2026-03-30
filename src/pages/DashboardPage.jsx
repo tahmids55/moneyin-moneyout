@@ -10,7 +10,14 @@ import BudgetProgressCard from '../components/BudgetProgressCard'
 import SkeletonLoader from '../components/SkeletonLoader'
 import { useAuth } from '../hooks/useAuth'
 import { useTransactions } from '../hooks/useTransactions'
-import { formatCurrency, formatDateByPreference, getTotals, toDate } from '../utils/finance'
+import {
+  formatCurrency,
+  formatDateByPreference,
+  getTotals,
+  isCashInType,
+  isCashOutType,
+  toDate,
+} from '../utils/finance'
 import { useBudget } from '../hooks/useBudget'
 import { upsertMonthlyBudget } from '../services/budgetService'
 import { usePreferences } from '../hooks/usePreferences'
@@ -34,7 +41,7 @@ export default function DashboardPage() {
     const currentYear = new Date().getFullYear()
 
     return transactions
-      .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
+      .filter((tx) => isCashOutType(tx.type))
       .filter((tx) => {
         const date = toDate(tx.date)
         return date && date.getMonth() === currentMonth && date.getFullYear() === currentYear
@@ -45,13 +52,13 @@ export default function DashboardPage() {
   const monthlyBudget = Number(budget?.monthlyBudget || 0)
   const remainingBudget = monthlyBudget - currentMonthExpense
   const budgetExceeded = monthlyBudget > 0 && remainingBudget < 0
-  const savingsRate = totals.income > 0 ? ((balance / totals.income) * 100).toFixed(1) : '0.0'
+  const savingsRate = totals.cashInflow > 0 ? ((balance / totals.cashInflow) * 100).toFixed(1) : '0.0'
   const budgetUsedPercent = monthlyBudget > 0 ? ((currentMonthExpense / monthlyBudget) * 100).toFixed(1) : '0.0'
 
   const todaySpending = useMemo(() => {
     const today = new Date()
     return transactions
-      .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
+      .filter((tx) => isCashOutType(tx.type))
       .filter((tx) => {
         const date = toDate(tx.date)
         return date && date.toDateString() === today.toDateString()
@@ -63,7 +70,7 @@ export default function DashboardPage() {
     const now = referenceNow.getTime()
     const sevenDaysMs = 7 * 24 * 60 * 60 * 1000
     return transactions
-      .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
+      .filter((tx) => isCashOutType(tx.type))
       .filter((tx) => {
         const date = toDate(tx.date)
         return date && now - date.getTime() <= sevenDaysMs
@@ -74,7 +81,7 @@ export default function DashboardPage() {
   const highestCategory = useMemo(() => {
     const map = {}
     transactions
-      .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
+      .filter((tx) => isCashOutType(tx.type))
       .forEach((tx) => {
         const key = tx.category || 'Other'
         map[key] = (map[key] || 0) + Number(tx.amount)
@@ -258,9 +265,7 @@ export default function DashboardPage() {
                     </div>
                     <span
                       className={
-                        tx.type === 'income' || tx.type === 'debt' || tx.type === 'debts'
-                          ? 'status-tag tag-income'
-                          : 'status-tag tag-expense'
+                        isCashInType(tx.type) ? 'status-tag tag-income' : 'status-tag tag-expense'
                       }
                     >
                       {formatCurrency(tx.amount, currency)}

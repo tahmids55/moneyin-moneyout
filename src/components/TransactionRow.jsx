@@ -1,4 +1,9 @@
-import { formatCurrency, formatDateByPreference } from '../utils/finance'
+import {
+  formatCurrency,
+  formatDateByPreference,
+  getTransactionTypeLabel,
+  isCashInType,
+} from '../utils/finance'
 
 export default function TransactionRow({
   tx,
@@ -9,16 +14,9 @@ export default function TransactionRow({
   timezone,
   mobile = false,
 }) {
-  const isCashIn = tx.type === 'income' || tx.type === 'debt' || tx.type === 'debts'
+  const isCashIn = isCashInType(tx.type)
   const typeClass = isCashIn ? 'tag-income' : 'tag-expense'
-  const statusLabel =
-    tx.type === 'debt' || tx.type === 'debts'
-      ? 'Debt'
-      : tx.type === 'asset' || tx.type === 'assets'
-        ? 'Asset'
-        : tx.type === 'income'
-          ? 'Income'
-          : 'Expense'
+  const statusLabel = getTransactionTypeLabel(tx.type)
 
   if (mobile) {
     return (

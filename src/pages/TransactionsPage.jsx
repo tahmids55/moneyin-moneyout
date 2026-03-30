@@ -159,28 +159,30 @@ export default function TransactionsPage() {
       )
 
       await Promise.all(
-        validRows.map((row) =>
-          {
-            const normalizedType = String(row.type || '').trim().toLowerCase()
-            let resolvedType = 'expense'
+        validRows.map((row) => {
+          const normalizedType = String(row.type || '').trim().toLowerCase().replace(/\s+/g, '_')
+          let resolvedType = 'expense'
 
-            if (normalizedType === 'income') {
-              resolvedType = 'income'
-            } else if (normalizedType === 'asset' || normalizedType === 'assets') {
-              resolvedType = 'asset'
-            } else if (normalizedType === 'debt' || normalizedType === 'debts') {
-              resolvedType = 'debt'
-            }
+          if (normalizedType === 'income') {
+            resolvedType = 'income'
+          } else if (normalizedType === 'asset_debit' || normalizedType === 'asset' || normalizedType === 'assets') {
+            resolvedType = 'asset_debit'
+          } else if (normalizedType === 'asset_credit') {
+            resolvedType = 'asset_credit'
+          } else if (normalizedType === 'debt_debit') {
+            resolvedType = 'debt_debit'
+          } else if (normalizedType === 'debt_credit' || normalizedType === 'debt' || normalizedType === 'debts') {
+            resolvedType = 'debt_credit'
+          }
 
-            return addTransaction(user.uid, {
-              type: resolvedType,
-              category: row.category,
-              amount: Number(row.amount),
-              note: row.note || '',
-              date: new Date(row.date),
-            })
-          },
-        ),
+          return addTransaction(user.uid, {
+            type: resolvedType,
+            category: row.category,
+            amount: Number(row.amount),
+            note: row.note || '',
+            date: new Date(row.date),
+          })
+        }),
       )
 
       toast.success(`Imported ${validRows.length} transactions`)

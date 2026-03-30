@@ -34,8 +34,10 @@ export default function FiltersBar({ filters, categories, onChange, onReset }) {
             <option value="all">All</option>
             <option value="income">Income</option>
             <option value="expense">Expense</option>
-            <option value="asset">Asset</option>
-            <option value="debt">Debt</option>
+            <option value="asset_debit">Asset Debit</option>
+            <option value="asset_credit">Asset Credit</option>
+            <option value="debt_debit">Debts Debit</option>
+            <option value="debt_credit">Debts Credit</option>
           </select>
         </label>
 

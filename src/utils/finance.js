@@ -60,21 +60,100 @@ export function formatDateByPreference(value, dateFormat = 'DD/MM/YYYY', timezon
   }).format(date)
 }
 
+export function normalizeTransactionType(type) {
+  const normalized = String(type || '').trim().toLowerCase().replace(/\s+/g, '_')
+
+  if (normalized === 'assets' || normalized === 'asset') {
+    return 'asset_debit'
+  }
+
+  if (normalized === 'debts' || normalized === 'debt') {
+    return 'debt_credit'
+  }
+
+  if (
+    normalized === 'income' ||
+    normalized === 'expense' ||
+    normalized === 'asset_debit' ||
+    normalized === 'asset_credit' ||
+    normalized === 'debt_debit' ||
+    normalized === 'debt_credit'
+  ) {
+    return normalized
+  }
+
+  return 'expense'
+}
+
+export function isCashInType(type) {
+  const normalized = normalizeTransactionType(type)
+  return normalized === 'income' || normalized === 'asset_credit' || normalized === 'debt_credit'
+}
+
+export function isCashOutType(type) {
+  return !isCashInType(type)
+}
+
+export function getTransactionTypeLabel(type) {
+  const normalized = normalizeTransactionType(type)
+
+  if (normalized === 'asset_debit') {
+    return 'Asset Debit'
+  }
+
+  if (normalized === 'asset_credit') {
+    return 'Asset Credit'
+  }
+
+  if (normalized === 'debt_debit') {
+    return 'Debts Debit'
+  }
+
+  if (normalized === 'debt_credit') {
+    return 'Debts Credit'
+  }
+
+  if (normalized === 'income') {
+    return 'Income'
+  }
+
+  return 'Expense'
+}
+
 export function getTotals(transactions) {
   return transactions.reduce(
     (acc, tx) => {
-      if (tx.type === 'income') {
+      const normalizedType = normalizeTransactionType(tx.type)
+      const amount = Number(tx.amount)
+
+      if (normalizedType === 'income') {
         acc.income += Number(tx.amount)
-        acc.cashInflow += Number(tx.amount)
-      } else if (tx.type === 'debt' || tx.type === 'debts') {
-        acc.debts += Number(tx.amount)
-        acc.cashInflow += Number(tx.amount)
-      } else if (tx.type === 'expense') {
-        acc.expense += Number(tx.amount)
-        acc.cashOutflow += Number(tx.amount)
-      } else if (tx.type === 'asset' || tx.type === 'assets') {
-        acc.assets += Number(tx.amount)
-        acc.cashOutflow += Number(tx.amount)
+      }
+
+      if (normalizedType === 'expense') {
+        acc.expense += amount
+      }
+
+      if (normalizedType === 'asset_debit') {
+        acc.assets += amount
+      }
+
+      if (normalizedType === 'asset_credit') {
+        acc.assets -= amount
+      }
+
+      if (normalizedType === 'debt_credit') {
+        acc.debts += amount
+      }
+
+      if (normalizedType === 'debt_debit') {
+        acc.debts -= amount
+      }
+
+      if (isCashInType(normalizedType)) {
+        acc.cashInflow += amount
+      } else {
+        acc.cashOutflow += amount
       }
 
       return acc
@@ -87,7 +166,7 @@ export function getExpenseByCategory(transactions) {
   const result = {}
 
   transactions
-    .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
+    .filter((tx) => isCashOutType(tx.type))
     .forEach((tx) => {
       const key = tx.category || 'Other'
       result[key] = (result[key] || 0) + Number(tx.amount)
@@ -109,7 +188,7 @@ export function getMonthlyIncomeExpenseSeries(transactions, monthCount = 6) {
     const end = endOfMonth(monthDate)
 
     return transactions
-      .filter((tx) => tx.type === 'income' || tx.type === 'debt' || tx.type === 'debts')
+      .filter((tx) => isCashInType(tx.type))
       .filter((tx) => {
         const date = toDate(tx.date)
         return date && date >= start && date <= end
@@ -119,7 +198,7 @@ export function getMonthlyIncomeExpenseSeries(transactions, monthCount = 6) {
 
   const expense = months.map((monthDate) =>
     transactions
-      .filter((tx) => tx.type === 'expense' || tx.type === 'asset' || tx.type === 'assets')
+      .filter((tx) => isCashOutType(tx.type))
       .filter((tx) => {
         const date = toDate(tx.date)
         return date && isSameMonth(date, monthDate)
