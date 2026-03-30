@@ -28,11 +28,12 @@ export async function getUserProfile(uid) {
 
 export async function updateUserProfile(uid, payload) {
   const userRef = doc(db, 'users', uid)
+  const safeName = typeof payload?.name === 'string' ? payload.name.trim() : null
 
   await setDoc(
     userRef,
     {
-      ...payload,
+      ...(safeName ? { name: safeName } : {}),
       uid,
       updatedAt: serverTimestamp(),
     },

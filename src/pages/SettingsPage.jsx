@@ -45,7 +45,6 @@ export default function SettingsPage() {
   const { preferences, updatePreferences } = usePreferences()
 
   const [name, setName] = useState(profile?.name || '')
-  const [email, setEmail] = useState(profile?.email || user?.email || '')
   const [savingProfile, setSavingProfile] = useState(false)
 
   const timezoneOptions = useMemo(() => {
@@ -63,7 +62,7 @@ export default function SettingsPage() {
 
     try {
       setSavingProfile(true)
-      await updateUserProfile(user.uid, { name, email })
+      await updateUserProfile(user.uid, { name })
       await refreshProfile()
       toast.success('Profile updated')
     } catch {
@@ -110,11 +109,14 @@ export default function SettingsPage() {
                 <input
                   type="email"
                   className="field-input"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  required
+                  value={profile?.email || user?.email || ''}
+                  readOnly
+                  disabled
                 />
               </label>
+              <p className="text-xs text-muted">
+                Email is managed by Firebase Authentication and cannot be edited here.
+              </p>
             </div>
 
             <button type="submit" className="btn-primary mt-4" disabled={savingProfile}>
