@@ -266,6 +266,28 @@
     filter: none;
   }
 
+  .dark .btn-primary {
+    background: linear-gradient(120deg, #29a19c, #29a19c);
+    color: #e4e4e7;
+    box-shadow: 0 8px 18px rgba(41, 161, 156, 0.26);
+  }
+
+  .dark .btn-primary:hover {
+    background: linear-gradient(120deg, #238c88, #238c88);
+    color: #e4e4e7;
+  }
+
+  .dark-gray .btn-primary {
+    background: linear-gradient(120deg, #dbd8e3, #dbd8e3);
+    color: #1f1f23;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+  }
+
+  .dark-gray .btn-primary:hover {
+    background: linear-gradient(120deg, #d1cdd9, #d1cdd9);
+    color: #1f1f23;
+  }
+
   .btn-secondary {
     @apply rounded-xl px-4 py-2 font-semibold transition;
     border: 1px solid var(--border-soft);

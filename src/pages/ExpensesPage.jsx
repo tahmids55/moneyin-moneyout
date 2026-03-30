@@ -3,14 +3,13 @@ import toast from 'react-hot-toast'
 import Sidebar from '../components/Sidebar'
 import Topbar from '../components/Topbar'
 import TransactionTable from '../components/TransactionTable'
-import TransactionForm from '../components/TransactionForm'
 import FiltersBar from '../components/FiltersBar'
 import Modal from '../components/Modal'
 import SkeletonLoader from '../components/SkeletonLoader'
 import { useAuth } from '../hooks/useAuth'
 import { usePreferences } from '../hooks/usePreferences'
 import { useTransactions } from '../hooks/useTransactions'
-import { addTransaction, deleteTransaction, updateTransaction } from '../services/transactionService'
+import { deleteTransaction } from '../services/transactionService'
 
 const initialFilters = {
   fromDate: '',
@@ -25,7 +24,6 @@ export default function ExpensesPage() {
   const { currency, dateFormat, timezone } = usePreferences()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [filters, setFilters] = useState(initialFilters)
-  const [editingTransaction, setEditingTransaction] = useState(null)
   const [pendingDelete, setPendingDelete] = useState(null)
 
   const { filteredTransactions, transactions, loading } = useTransactions(user?.uid, filters)
@@ -34,27 +32,6 @@ export default function ExpensesPage() {
     const categorySet = new Set(transactions.map((tx) => tx.category).filter(Boolean))
     return Array.from(categorySet)
   }, [transactions])
-
-  const submitTransaction = async (form) => {
-    try {
-      const payload = {
-        ...form,
-        type: 'expense',
-        date: form.parsedDate || new Date(form.date),
-      }
-
-      if (editingTransaction) {
-        await updateTransaction(editingTransaction.id, payload)
-        setEditingTransaction(null)
-        toast.success('Expense updated')
-      } else {
-        await addTransaction(user.uid, payload)
-        toast.success('Expense added')
-      }
-    } catch {
-      toast.error('Unable to save expense')
-    }
-  }
 
   const confirmDelete = async () => {
     if (!pendingDelete?.id) {
@@ -81,13 +58,6 @@ export default function ExpensesPage() {
           onMenu={() => setMobileOpen(true)}
         />
 
-        <TransactionForm
-          key={editingTransaction?.id || 'new-expense'}
-          onSubmit={submitTransaction}
-          editingTransaction={editingTransaction}
-          onCancelEdit={() => setEditingTransaction(null)}
-        />
-
         <FiltersBar
           filters={filters}
           categories={categories}
@@ -102,7 +72,7 @@ export default function ExpensesPage() {
         ) : (
           <TransactionTable
             transactions={filteredTransactions}
-            onEdit={setEditingTransaction}
+            onEdit={() => toast('Edit expense entries from Transactions page')}
             onDelete={setPendingDelete}
             currency={currency}
             dateFormat={dateFormat}
