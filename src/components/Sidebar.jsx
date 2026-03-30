@@ -8,7 +8,7 @@ const navItems = [
   { label: 'Income', path: '/income' },
   { label: 'Expenses', path: '/expenses' },
   { label: 'Categories', soon: true },
-  { label: 'Reports', soon: true },
+  { label: 'Reports', path: '/reports' },
   { label: 'Settings', path: '/settings' },
   { label: 'About Us', path: '/about' },
 ]

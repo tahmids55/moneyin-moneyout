@@ -10,6 +10,7 @@ import SettingsPage from './pages/SettingsPage'
 import IncomePage from './pages/IncomePage'
 import ExpensesPage from './pages/ExpensesPage'
 import AboutPage from './pages/AboutPage'
+import ReportsPage from './pages/ReportsPage'
 import { usePreferences } from './hooks/usePreferences'
 
 function App() {
@@ -80,6 +81,14 @@ function App() {
           element={
             <ProtectedRoute>
               <AboutPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute>
+              <ReportsPage />
             </ProtectedRoute>
           }
         />
