@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Sora:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg: #f9fafb;
+    --card-bg: rgba(255, 255, 255, 0.92);
+    --card-solid: #ffffff;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --primary: #c0c0c0;
+    --secondary: #6b7280;
+    --accent: #f87171;
+    --danger: #f87171;
+    --income: #34d399;
+    --warning: #fbbf24;
+    --hover: #6b7280;
+    --button-text: #111827;
+    --border-soft: rgba(156, 163, 175, 0.45);
+    --shadow: 0 12px 26px rgba(17, 24, 39, 0.08);
+  }
+
+  .dark {
+    --bg: #1f1f1f;
+    --card-bg: rgba(44, 44, 44, 0.9);
+    --card-solid: #2c2c2c;
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+    --primary: #9ca3af;
+    --secondary: #9ca3af;
+    --accent: #f87171;
+    --danger: #f87171;
+    --income: #34d399;
+    --warning: #fbbf24;
+    --hover: #6b7280;
+    --button-text: #111827;
+    --border-soft: rgba(156, 163, 175, 0.34);
+    --shadow: 0 16px 34px rgba(0, 0, 0, 0.4);
+  }
+
+  body {
+    @apply min-h-screen font-sans antialiased;
+    background-color: var(--bg);
+    color: var(--text-main);
+    background-image:
+      radial-gradient(860px 440px at -6% -12%, rgba(192, 192, 192, 0.2) 0, transparent 65%),
+      radial-gradient(760px 420px at 108% 2%, rgba(107, 114, 128, 0.16) 0, transparent 62%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.3), transparent 50%);
+    background-attachment: fixed;
+  }
+
+  .dark body {
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(940px 520px at -8% -12%, rgba(156, 163, 175, 0.13) 0, transparent 65%),
+      radial-gradient(840px 460px at 108% 4%, rgba(107, 114, 128, 0.14) 0, transparent 62%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 48%);
+  }
+
+  * {
+    @apply box-border;
+  }
+
+  select option {
+    color: #0f172a;
+  }
+
+  .dark select option {
+    color: #e5e7eb;
+    background: #1f1f1f;
+  }
+}
+
+@layer components {
+  .app-shell {
+    @apply min-h-screen pb-8;
+  }
+
+  .glass {
+    border: 1px solid var(--border-soft);
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+  }
+
+  .screen-center {
+    @apply flex min-h-screen items-center justify-center;
+    color: var(--text-muted);
+  }
+
+  .auth-page {
+    @apply flex min-h-screen items-center justify-center px-4 py-8;
+  }
+
+  .auth-shell {
+    @apply w-full max-w-md rounded-3xl p-6 md:p-8;
+  }
+
+  .badge {
+    @apply inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em];
+    border: 1px solid color-mix(in srgb, var(--secondary) 25%, transparent);
+    background: color-mix(in srgb, var(--secondary) 10%, transparent);
+    color: var(--secondary);
+  }
+
+  .dark .badge {
+    color: #d1d5db;
+  }
+
+  .auth-title {
+    @apply font-display mt-4 text-4xl leading-tight;
+    color: var(--text-main);
+  }
+
+  .auth-subtitle {
+    @apply mt-2 text-sm;
+    color: var(--text-muted);
+  }
+
+  .field-label {
+    @apply flex flex-col gap-1 text-sm font-medium;
+    color: var(--text-muted);
+  }
+
+  .field-input {
+    @apply rounded-xl px-3 py-2 outline-none transition;
+    color: var(--text-main);
+    border: 1px solid var(--border-soft);
+    background: color-mix(in srgb, var(--card-solid) 72%, transparent);
+  }
+
+  .dark .field-input {
+    background: rgba(55, 55, 55, 0.85);
+    border: 1px solid rgba(156, 163, 175, 0.35);
+    color: #e5e7eb;
+  }
+
+  .field-input:focus {
+    border-color: color-mix(in srgb, var(--primary) 55%, var(--secondary));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 26%, transparent);
+  }
+
+  .dark .field-input:focus {
+    border-color: rgba(192, 192, 192, 0.86);
+    box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.24);
+  }
+
+  .btn-primary {
+    @apply rounded-xl px-4 py-2 font-semibold transition disabled:cursor-not-allowed disabled:opacity-70;
+    background: linear-gradient(120deg, var(--primary), color-mix(in srgb, var(--primary) 75%, #ffffff));
+    color: var(--button-text);
+    box-shadow: 0 8px 18px rgba(107, 114, 128, 0.22);
+  }
+
+  .btn-primary:hover {
+    background: var(--hover);
+    color: #f9fafb;
+    filter: none;
+  }
+
+  .btn-secondary {
+    @apply rounded-xl px-4 py-2 font-semibold transition;
+    border: 1px solid var(--border-soft);
+    background: color-mix(in srgb, var(--card-solid) 76%, transparent);
+    color: var(--text-main);
+  }
+
+  .dark .btn-secondary {
+    background: rgba(58, 58, 58, 0.84);
+    border: 1px solid rgba(156, 163, 175, 0.34);
+    color: #e5e7eb;
+  }
+
+  .btn-secondary:hover {
+    background: color-mix(in srgb, var(--card-solid) 90%, transparent);
+  }
+
+  .text-main {
+    color: var(--text-main);
+  }
+
+  .text-muted {
+    color: var(--text-muted);
+  }
+}
