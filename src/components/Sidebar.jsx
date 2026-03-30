@@ -5,13 +5,12 @@ import { useAuth } from '../hooks/useAuth'
 const navItems = [
   { label: 'Dashboard', path: '/dashboard' },
   { label: 'Transactions', path: '/transactions' },
-  { label: 'Income', soon: true },
-  { label: 'Expenses', soon: true },
-  { label: 'Budgets', soon: true },
+  { label: 'Income', path: '/income' },
+  { label: 'Expenses', path: '/expenses' },
   { label: 'Categories', soon: true },
   { label: 'Reports', soon: true },
   { label: 'Settings', path: '/settings' },
-  { label: 'Support', soon: true },
+  { label: 'About Us', path: '/about' },
 ]
 
 function UserAvatar({ displayName }) {
@@ -46,8 +45,8 @@ export default function Sidebar({ mobileOpen, onClose }) {
         <div className="sidebar-header">
           <UserAvatar displayName={displayName} />
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-slate-100">{displayName}</p>
-            <p className="truncate text-xs text-slate-400">{user?.email || 'student'}</p>
+            <p className="sidebar-user-name truncate text-sm font-semibold">{displayName}</p>
+            <p className="sidebar-user-email truncate text-xs">{user?.email || 'student'}</p>
           </div>
         </div>
 
@@ -90,8 +89,8 @@ export default function Sidebar({ mobileOpen, onClose }) {
             <div className="sidebar-header">
               <UserAvatar displayName={displayName} />
               <div className="min-w-0">
-                <p className="truncate text-sm font-semibold text-slate-100">{displayName}</p>
-                <p className="truncate text-xs text-slate-400">{user?.email || 'student'}</p>
+                <p className="sidebar-user-name truncate text-sm font-semibold">{displayName}</p>
+                <p className="sidebar-user-email truncate text-xs">{user?.email || 'student'}</p>
               </div>
             </div>
 

@@ -115,12 +115,6 @@ export default function SettingsPage() {
     localStorage.setItem('sft.categories', JSON.stringify(updated))
   }
 
-  const topbarActions = [
-    { label: 'Light', onClick: () => setTheme('light') },
-    { label: 'Dark', onClick: () => setTheme('dark'), tone: 'primary' },
-    { label: 'Dark Gray', onClick: () => setTheme('dark-gray') },
-  ]
-
   return (
     <div className="app-shell">
       <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
@@ -130,7 +124,6 @@ export default function SettingsPage() {
           title="Settings"
           subtitle="Fine tune profile, preferences, exports, and reminders"
           onMenu={() => setMobileOpen(true)}
-          actions={topbarActions}
         />
 
         <section className="grid gap-6 xl:grid-cols-2">
@@ -319,9 +312,9 @@ export default function SettingsPage() {
         </section>
 
         <section className="glass rounded-2xl border border-slate-500/20 p-5">
-          <h2 className="font-display text-lg text-main">Support</h2>
+          <h2 className="font-display text-lg text-main">About Us</h2>
           <p className="text-sm text-muted">
-            Need help? Use support from the sidebar. This section is reserved for future in-app help center.
+            MoneyIN MoneyOUT helps students build better financial habits with privacy-safe, real-time insights.
           </p>
         </section>
       </main>

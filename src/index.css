@@ -123,22 +123,46 @@
   .app-sidebar {
     @apply fixed left-4 top-4 z-40 h-[calc(100vh-2rem)] w-56 flex-col rounded-2xl;
     border: 1px solid var(--border-soft);
+    background: linear-gradient(180deg, rgba(248, 250, 255, 0.96), rgba(240, 244, 252, 0.94));
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.14);
+    backdrop-filter: blur(14px);
+  }
+
+  .dark .app-sidebar,
+  .dark-gray .app-sidebar {
     background: linear-gradient(180deg, rgba(16, 19, 25, 0.96), rgba(14, 17, 24, 0.9));
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.32);
-    backdrop-filter: blur(14px);
   }
 
   .sidebar-link {
     @apply flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold transition;
+    color: #334155;
+  }
+
+  .dark .sidebar-link,
+  .dark-gray .sidebar-link {
     color: #c7d4eb;
   }
 
   .sidebar-link:hover {
+    background: rgba(148, 163, 184, 0.2);
+    color: #0f172a;
+  }
+
+  .dark .sidebar-link:hover,
+  .dark-gray .sidebar-link:hover {
     background: rgba(76, 88, 109, 0.3);
     color: #f8fbff;
   }
 
   .sidebar-link-active {
+    background: linear-gradient(120deg, rgba(0, 212, 198, 0.18), rgba(109, 74, 255, 0.14));
+    border: 1px solid rgba(0, 170, 160, 0.26);
+    color: #0f172a;
+  }
+
+  .dark .sidebar-link-active,
+  .dark-gray .sidebar-link-active {
     background: linear-gradient(120deg, rgba(0, 212, 198, 0.22), rgba(109, 74, 255, 0.2));
     border: 1px solid rgba(0, 212, 198, 0.38);
     color: #f8fbff;
@@ -269,7 +293,30 @@
   }
 
   .sidebar-header {
-    @apply mx-3 mt-3 flex items-center gap-3 rounded-xl border border-slate-500/20 bg-slate-800/40 p-3;
+    @apply mx-3 mt-3 flex items-center gap-3 rounded-xl border border-slate-300/50 bg-white/65 p-3;
+  }
+
+  .dark .sidebar-header,
+  .dark-gray .sidebar-header {
+    @apply border-slate-500/20 bg-slate-800/40;
+  }
+
+  .sidebar-user-name {
+    color: #0f172a;
+  }
+
+  .sidebar-user-email {
+    color: #64748b;
+  }
+
+  .dark .sidebar-user-name,
+  .dark-gray .sidebar-user-name {
+    color: #f1f5f9;
+  }
+
+  .dark .sidebar-user-email,
+  .dark-gray .sidebar-user-email {
+    color: #94a3b8;
   }
 
   .sidebar-nav {
@@ -293,7 +340,12 @@
   }
 
   .mobile-drawer {
-    @apply h-full w-72 overflow-y-auto border-r border-slate-500/30 bg-slate-950 pt-4;
+    @apply h-full w-72 overflow-y-auto border-r border-slate-300/40 bg-slate-50 pt-4;
+  }
+
+  .dark .mobile-drawer,
+  .dark-gray .mobile-drawer {
+    @apply border-slate-500/30 bg-slate-950;
   }
 
   .topbar-shell {
@@ -313,7 +365,12 @@
   }
 
   .topbar-menu-btn {
-    @apply rounded-lg border border-slate-500/30 bg-slate-900/60 p-2 text-slate-200;
+    @apply rounded-lg border border-slate-400/35 bg-white/80 p-2 text-slate-700;
+  }
+
+  .dark .topbar-menu-btn,
+  .dark-gray .topbar-menu-btn {
+    @apply border-slate-500/30 bg-slate-900/60 text-slate-200;
   }
 
   .summary-card {
