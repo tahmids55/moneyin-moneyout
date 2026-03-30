@@ -15,13 +15,25 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 }
 
-const app = initializeApp(firebaseConfig)
+const missingFirebaseConfigKeys = Object.entries(firebaseConfig)
+  .filter(([, value]) => !value)
+  .map(([key]) => key)
 
-export const auth = getAuth(app)
-export const db = getFirestore(app)
+export const firebaseReady = missingFirebaseConfigKeys.length === 0
 
-enableIndexedDbPersistence(db).catch(() => {
-  // Persistence can fail in private mode or multi-tab ownership conflicts.
-})
+export const firebaseConfigError = firebaseReady
+  ? null
+  : `Missing Firebase env values: ${missingFirebaseConfigKeys.join(', ')}`
+
+const app = firebaseReady ? initializeApp(firebaseConfig) : null
+
+export const auth = app ? getAuth(app) : null
+export const db = app ? getFirestore(app) : null
+
+if (db) {
+  enableIndexedDbPersistence(db).catch(() => {
+    // Persistence can fail in private mode or multi-tab ownership conflicts.
+  })
+}
 
 export { serverTimestamp }
