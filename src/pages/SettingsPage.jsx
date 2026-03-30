@@ -81,7 +81,7 @@ export default function SettingsPage() {
     <div className="app-shell">
       <Navbar />
 
-      <main className="mx-auto mt-6 w-[94%] max-w-6xl space-y-6 pb-12">
+      <main className="app-content">
         <section className="glass rounded-2xl p-5">
           <h1 className="font-display text-3xl text-main">Settings</h1>
           <p className="mt-1 text-sm text-muted">Personalize your dashboard and regional preferences.</p>

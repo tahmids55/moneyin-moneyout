@@ -177,7 +177,7 @@ export default function TransactionsPage() {
     <div className="app-shell">
       <Navbar />
 
-      <main className="mx-auto mt-6 w-[94%] max-w-6xl space-y-6 pb-12">
+      <main className="app-content">
         <TransactionForm
           key={editingTransaction?.id || 'new'}
           onSubmit={submitTransaction}

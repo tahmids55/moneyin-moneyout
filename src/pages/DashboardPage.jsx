@@ -58,7 +58,7 @@ export default function DashboardPage() {
     <div className="app-shell">
       <Navbar />
 
-      <main className="mx-auto mt-6 w-[94%] max-w-6xl space-y-6 pb-12">
+      <main className="app-content">
         <section className="grid gap-4 md:grid-cols-3">
           <StatCard label="Total Income" value={totals.income} tone="income" currency={currency} />
           <StatCard label="Total Expense" value={totals.expense} tone="expense" currency={currency} />
